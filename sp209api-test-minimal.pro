@@ -24,19 +24,19 @@ win32 {
     copy_sp209.commands = $(COPY_FILE) \"$$shell_path($$PWD\\dependencies\\sp209_api_$${ARCHVER}.dll.rename)\" \"$$shell_path($$OUT_PWD\\sp209_api.dll)\"
 }
 unix:!macx{
-    LIBS += -L$$OUT_PWD/../scanaduinoApi/ -lsp209_ap
-    copy_sp209.commands = $(COPY_FILE) \"$$shell_path($$PWD\\dependencies\\libsp209_api.so.rename)\" \"$$shell_path($$OUT_PWD)\\libsp209_api.so\"
+    LIBS += -lsp209_api
+    copy_sp209.commands = $(COPY_FILE) \"$$shell_path($$PWD\\dependencies\\libsp209_api.so.rename)\" \"$$shell_path($$OUT_PWD)\\libsp209_api.so.1\"
 }
 
 macx{
-    LIBS += -L$$OUT_PWD/../scanaduinoApi/ -lsp209_ap
+    LIBS += -L$$OUT_PWD/../scanaduinoApi/ -lsp209_api
     copy_sp209.commands = $(COPY_FILE) \"$$shell_path($$PWD\\dependencies\\libsp209_api.dylib.rename)\" \"$$shell_path($$OUT_PWD)\\libsp209_api.dylib\"
 }
 
 first.depends = $(first) copy_sp209
 export(first.depends)
 export(copy_sp209.commands)
-QMAKE_EXTRA_TARGETS += first copy_ftdi copy_sp209
+QMAKE_EXTRA_TARGETS += first copy_sp209
 
 
 
