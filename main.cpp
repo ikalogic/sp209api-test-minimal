@@ -4,11 +4,11 @@
 #include <thread>
 #include "sp209api.h"
 
-#define msleep(x) std::this_thread::sleep_for(std::chrono::milliseconds(x));
+#define msleep(x) //std::this_thread::sleep_for(std::chrono::milliseconds(x));
 
 #define DEBUG_ENABLE (1)
 #if DEBUG_ENABLE
-    #define DBG   std::cout << "\n\r" << " "
+    #define DBG   std::cout << endl << " "
 #else
     #define DBG if (0) std::cout
 #endif
@@ -38,7 +38,6 @@ int main()
         d = sp209api_get_device_descriptor(h,0);
         DBG << "New device, serial number = " << d.sn << ", description = " << d.desc ;
         e = sp209api_device_open(h,d,SP209API_VARIANT_STD);
-
         if (e == IHWAPI_OK)
         {
             DBG << "Device is open" << endl;
@@ -82,7 +81,7 @@ int main()
 
     if (e == IHWAPI_OK)
     {
-        DBG << "Waiting for trigger...";
+        DBG << "Waiting for trigger..." << endl;
         while (sp209api_get_triggered_flag(h) == false)
         {
             msleep(200);
