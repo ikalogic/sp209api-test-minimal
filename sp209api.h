@@ -9,11 +9,13 @@
     #include "ftd2xxUNIX.h"
     #include "WinTypes.h"
     #  define SCANA_API __attribute__((visibility("default")))
-#else
+#elif defined(OS_WIN)
     #define SCANA_API __declspec(dllimport)
+#else
+    #define SCANA_API
 #endif
 
-
+#include <cstddef>
 #include "ihwapi_common_types.h"
 #include "sp209api_types.h"
 
