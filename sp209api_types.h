@@ -2,24 +2,49 @@
 #define SP209API_TYPES_H
 
 #include <stdint.h>
+#include "ihwapi_common_types.h"
 
-#define API_VER_MAJ 1
+#if defined(GENERATE_API_WIN)
+#define SCANA_API __declspec(dllexport)
+#elif defined(GENERATE_API_UNIX)
+#define SCANA_API __attribute__((visibility("default")))
+#elif defined(GENERATE_API_MAC)
+#include "ftd2xxUNIX.h"
+#include "WinTypes.h"
+#define SCANA_API __attribute__((visibility("default")))
+#elif defined(OS_WIN)
+#define SCANA_API __declspec(dllimport)
+#else
+#define SCANA_API
+#endif
+
+#define API_VER_MAJ 2
 #define API_VER_MIN 0
 #define API_VER_PAT 0
 
-#define SP209_CHANNELS_COUNT        (9)
-#define SP209_TRIG_ENGINES_COUNT    (2)
-#define SP209_THRESHOLDS_COUNT      (3)
-#define SP209_MAX_TRIG_STEPS_COUNT  (128)
+#define SP209_CHANNELS_COUNT (9)
+#define SP209_TRIG_ENGINES_COUNT (2)
+#define SP209_THRESHOLDS_COUNT (3)
+#define SP209_MAX_TRIG_STEPS_COUNT (128)
+
+
+/**
+ * @brief sp209api_handle Pointer to SP209API
+ */
+typedef void* sp209api_handle;
+
+
+
+
 
 /**
  * @brief The sp209api_variant_t enum is used to determine which firmware is loaded when openning a device
  */
 enum sp209api_variant_t
 {
-    SP209API_VARIANT_STD = 0, ///< Standard SP209 firmware
-    SP209API_VARIANT_NEXUS = 1,///< Custom firmware reserved for Nexus bus analyzer
-    SP209API_VARIANT_TPIU = 2, ///< Custom firmware reserved for TPIU bus analyzer
+    SP209API_VARIANT_STD = 0,   ///< Standard SP209 firmware
+    SP209API_VARIANT_NEXUS = 1, ///< Custom firmware reserved for Nexus bus analyzer
+    SP209API_VARIANT_TPIU = 2,  ///< Custom firmware reserved for TPIU bus analyzer
 };
 
 /**
@@ -28,9 +53,9 @@ enum sp209api_variant_t
  */
 enum sp209api_clock_pol_t
 {
-    CLK_POL_RISING = 1, ///< Rising edge
+    CLK_POL_RISING = 1,  ///< Rising edge
     CLK_POL_FALLING = 0, ///< Falling edge
-    CLK_POL_DUAL = 2, ///< Dual edge (any rising or falling edge)
+    CLK_POL_DUAL = 2,    ///< Dual edge (any rising or falling edge)
 };
 
 /**
@@ -39,12 +64,9 @@ enum sp209api_clock_pol_t
  */
 enum sp209api_device_model_t
 {
-    SP209API_MODEL_209, ///< Standard SP209
-    SP209API_MODEL_209I, ///< Industrial SP209i
-
-    SP209API_MODEL_209C1, ///< Custom HW for ST-Micro internal use
-    SP209API_MODEL_209A1, ///< Custom HW ID for internal use only
-    SP209API_MODEL_NONE ///< Should never be used.
+    SP209API_MODEL_NONE = 0,   ///< Should never be used.
+    SP209API_MODEL_209 = 360,  ///< Standard SP209
+    SP209API_MODEL_209I = 370, ///< Industrial SP209i
 };
 
 /**
@@ -52,10 +74,10 @@ enum sp209api_device_model_t
  */
 enum sp209api_threshold_t
 {
-    SP209API_TH_1V8 = 0, ///< 1.8V logic level
+    SP209API_TH_1V8 = 0,   ///< 1.8V logic level
     SP209API_X_TH_2V5 = 1, ///< 2.5V logic level
     SP209API_X_TH_3V3 = 2, ///< 3.3V logic level
-    SP209API_TH_5V0 = 4, ///< 5.0V logic level
+    SP209API_TH_5V0 = 4,   ///< 5.0V logic level
 };
 
 /**
@@ -70,8 +92,6 @@ enum sp209api_trigger_type_t
     SP209API_TRG_EXT_RISING,
     SP209API_TRG_EXT_FALLING
 };
-
-
 
 #pragma pack(push, 4) //Ensure known packing on all platforms
 
@@ -190,42 +210,16 @@ struct sp209api_settings_t
  * During a transition, one or more chanel's logic level change. This structure describes this
  * transition.
  */
-struct sp209api_transition_t
+struct sp209api_trs_t
 {
-    /**
-     * @brief data_word The 9 less significant bits of this word describe the logic level
-     * of the 9 channels of SP209 device, right after the transition (the newest value of
-     * the logic levels)
-     */
-    uint16_t data_word;     //Line values
+    uint8_t value; //Line value
     /**
      * @brief delta_samples Number of samples since the previous transition
      */
-    uint8_t delta_samples;  //number of samples
-    /**
-     * @brief trigger_flag is set to TRUE if trigged occured.
-     * @note trigger_flag will remain true for all transitions that are subsequent to the trigger instant
-     */
-    bool trigger_flag;
+    int64_t sampple_index; //index of the same associated with that transition
 };
 
-/**
- * @brief The sp209api_tpiu_data_t struct describes TPIU custom firmware transaction
- * @warning This is used for custom and proprietary usage of SP209C1 devices.
- */
-struct sp209api_tpiu_data_t
-{
-    /**
-     * @brief id ID associated with a data byte
-     */
-    uint8_t id;     //ID associated with data byte
-    /**
-     * @brief data Data content (single byte)
-     */
-    uint8_t data;  //Data byte
-};
 
 #pragma pack(pop)
-
 
 #endif // SP209API_TYPES_H
