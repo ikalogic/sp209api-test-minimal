@@ -10,7 +10,13 @@ SOURCES += \
 win32 {
     DEFINES += OS_WIN
     DEFINES += __WINDOWS_TYPES__
-    LIBS += sp209_api.dll
+
+    win32-msvc* {
+        LIBS += -lsp209_api
+    }
+    equals(QMAKE_CXX, g++) {
+        LIBS += sp209_api.dll
+    }
 }
 unix:!macx{
     LIBS += -lsp209_api
