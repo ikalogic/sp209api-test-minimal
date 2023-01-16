@@ -172,36 +172,139 @@ extern "C"
      * @details There is no any obligation to use this function, as the configuration of the device
      * usually takes a few milliseconds. This function is mainly here for feedback and monitoring purposes.
      * @param handle
+     * @param f pointer to bool type varaible to hold the result
      * @return TRUE if configuration is done, FALSE if configuration is still in progress.
      */
     SCANA_API
     ihwapi_err_code_t sp209api_get_config_done_flag(sp209api_handle handle, bool *f);
 
+
+    /**
+     * @brief Gets the device have triggered flag
+     * 
+     * @param handle 
+     * @param f pointer to bool type varaible to hold the result which will be true if 
+     * the device has triggered
+     * @return error code.
+     */
     SCANA_API
     ihwapi_err_code_t sp209api_get_triggered_flag(sp209api_handle handle, bool *f);
 
+    /**
+     * @brief Gets the trigger position expressed in samples.
+     * 
+     * @param handle 
+     * @param trig_pos Pointer to uint64_t variable where the result will be stored
+     * @return error code.
+     */
     SCANA_API
     ihwapi_err_code_t sp209api_get_trigger_position(sp209api_handle handle, uint64_t *trig_pos);
 
+    /**
+     * @brief Gets the samples that have been read from device, that are buffered
+     * and are ready for readout.
+     * 
+     * @param handle 
+     * @param total_available_samples Pointer to int64_t to hold the total number of available samples
+     * @param post_trig_samples Pointer to int64_t to hold the number of samples after the trigger condition
+     * @return error code.
+     */
     SCANA_API
     ihwapi_err_code_t sp209api_get_available_samples(sp209api_handle handle, int64_t *total_available_samples, int64_t *post_trig_samples);
+
+    /**
+     * @brief Resets the transitions iterator for the channel with index `channel_index`
+     * After calling this function, the next call to trs_get_next() will get the very first transition
+     * 
+     * @param handle 
+     * @param channel_index 
+     * @return error code.
+     */
     SCANA_API
     ihwapi_err_code_t sp209api_trs_reset(sp209api_handle handle, uint8_t channel_index);
+
+    /**
+     * @brief Resets the transitions iterator for the channel with index `channel_index` and 
+     * make it point right before `target_sample`.
+     * After calling this function, the next call to trs_get_next() will get the very first transition
+     * after `target_sample`
+     * 
+     * @param handle 
+     * @param channel_index 
+     * @param target_sample 
+     * @return error code.
+     */
     SCANA_API
     ihwapi_err_code_t sp209api_trs_before(sp209api_handle handle, uint8_t channel_index, uint64_t target_sample);
+
+    /**
+     * @brief Advances the transition iterator for `channel_index` to the next transition and writes the details of that
+     * last transition in `transition_data`. Prior to calling this function, user must either call trs_reset() or 
+     * trs_before().
+     * 
+     * @param handle 
+     * @param channel_index 
+     * @param transition_data Pointer to structure of type sp209api_trs_t to hold the transition description
+     * @return error code.
+     */
     SCANA_API
     ihwapi_err_code_t sp209api_trs_get_next(sp209api_handle handle, uint8_t channel_index, sp209api_trs_t *transition_data);
+    
+    /**
+     * @brief Same as trs_get_before() except that the transition iterator rewinds to the previous transition.
+     * 
+     * @param handle 
+     * @param channel_index 
+     * @param transition_data 
+     * @return error code.
+     */
     SCANA_API
     ihwapi_err_code_t sp209api_trs_get_previous(sp209api_handle handle, uint8_t channel_index, sp209api_trs_t *transition_data);
+    
+    /**
+     * @brief This functions determines if the transition pointed be the iterator for the channel `channel_index`
+     * is pointing at the last transition.
+     * 
+     * @param handle 
+     * @param channel_index 
+     * @param is_not_last_trs Pointer to a bool variable that is writte;n to True if current transition is 
+     * not that last one, and further calls to trs_get_next() are valid.
+     * @return error code.
+     */
     SCANA_API
     ihwapi_err_code_t sp209api_trs_is_not_last(sp209api_handle handle, uint8_t channel_index, bool *is_not_last_trs);
 
+    /**
+     * @brief This function is used to determin if the current capture is done and all data have been retrieved 
+     * from the device. This function 
+     * @note In case of an error or aborted capture, the flag will always return false.
+     * 
+     * @param handle 
+     * @param f Pointer to bool variable to hold the state of the `capture done` flag.
+     * @return SCANA_API 
+     */
     SCANA_API
     ihwapi_err_code_t sp209api_get_capture_done_flag(sp209api_handle handle, bool *f);
 
+    /**
+     * @brief This function is used to check if the device is ready or if an operation is in
+     * progress.
+     * 
+     * @param handle 
+     * @param f pointer to bool type variable to hold the state of the `ready` flag
+     * @return SCANA_API 
+     */
     SCANA_API
     ihwapi_err_code_t sp209api_get_ready_flag(sp209api_handle handle, bool *f);
 
+    /**
+     * @brief Calling this function returns the last error that may have been thrown 
+     * by API internal threads. it's wise to use this in case of unxpected behavior
+     * or abnormal response times (e.g. config_done flag never equals true)
+     * 
+     * @param handle 
+     * @return SCANA_API 
+     */
     SCANA_API
     ihwapi_err_code_t sp209api_get_last_error(sp209api_handle handle);
 

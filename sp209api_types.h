@@ -207,7 +207,7 @@ struct sp209api_settings_t
 /**
  * @brief The sp209api_transition_t struct describes an SP209 transition
  * @details SP209 API provides captured samples in minimal structures called "transition".
- * During a transition, one or more chanel's logic level change. This structure describes this
+ * During a transition, a chanel's logic level change. This structure describes this
  * transition.
  */
 struct sp209api_trs_t
