@@ -4,14 +4,16 @@ The aim of this project is to demonstrate the usage of SP209 logic analyzer API.
 
 More info about the API can be found here: https://www.ikalogic.com/kb/ihwapi/logic-analyzer-api-guide/
 
+The example Qt projects takes care of correctly linking the libraries.
+
 # Installation
 First, please download and install ScanaStudio for your platform. While ScanaStudio is not needed, this will ensure drivers are isntalled in windows, and correct UDEV rules are set for UNIX. 
 
 ## Windows
-Nothing need to be done to get it running under windows, provided you use a recent (Qt5) environment.
+Compile against the sp1000g_api library in `dependencies/win` folder.
 
 ## Linux
-currently untested under Linux - contact us if Linux port is needed
+Compile against the sp1000g_api library in `dependencies/linux` folder.
 
 ## Mac
-currently untested under mac OS -  - contact us if MacOS port is needed
+Compile against the sp1000g_api library in `dependencies/mac` folder.
