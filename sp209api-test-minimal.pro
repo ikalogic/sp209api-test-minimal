@@ -19,6 +19,7 @@ win32 {
     }
 }
 unix: LIBS += -L$$PWD/dependencies/linux/ -lsp209_api
+macx: LIBS += -L$$PWD/dependencies/mac/ -lsp209_api.1.0.0
 
 HEADERS += \
     ihwapi_common_types.h \
