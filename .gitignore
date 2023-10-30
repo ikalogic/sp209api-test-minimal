@@ -51,3 +51,4 @@ compile_commands.json
 !/dependencies/*
 !/dependencies/win/*
 !/dependencies/win/msvc/*
+!/dependencies/linux/*
