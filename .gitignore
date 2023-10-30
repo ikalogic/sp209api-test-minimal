@@ -49,3 +49,6 @@ compile_commands.json
 *creator.user*
 
 !/dependencies/*
+!/dependencies/win/*
+!/dependencies/win/msvc/*
+!/dependencies/linux/*
